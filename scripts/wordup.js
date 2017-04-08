@@ -51,7 +51,8 @@ function addNewWordSubmission(word) {
     // Do we already have a wordSubmission with this word?
     // TODO 21
     // replace the hardcoded 'false' with the real answer
-    var alreadyUsed = false;
+	var alreadyUsed = model.wordSubmissions.filter(function(wrd){
+		return wrd.word == word});
 
     // if the word is valid and hasn't already been used, add it
     if (containsOnlyAllowedLetters(word) && alreadyUsed == false) {
@@ -214,10 +215,18 @@ function wordSubmissionChip(wordSubmission) {
 
     // if we know the status of this word (real word or not), then add a green score or red X
     if (wordSubmission.hasOwnProperty("isRealWord")) {
-        var scoreChip = $("<span></span>").text("⟐");
+        var scoreChip = $("<span></span>");
         // TODO 17
         // give the scoreChip appropriate text content
-
+		if (wordSubmission.isRealWord){
+			scoreChip.text(wordScore(wordSubmission.word));
+			scoreChip.addClass("tag tag-sm tag-primary");
+		}
+		else{
+			scoreChip.text("X");
+			scoreChip.addClass("tag tag-sm tag-danger");
+		}
+	
         // TODO 18
         // give the scoreChip appropriate css classes
 
@@ -345,7 +354,7 @@ function wordScore(word) {
     // TODO 19
     // Replace the empty list below.
     // Map the list of letters into a list of scores, one for each letter.
-    var letterScores = [];
+    var letterScores = letters.map(letterScore);
 
     // return the total sum of the letter scores
     return letterScores.reduce(add, 0);
@@ -369,7 +378,7 @@ function currentScore() {
 
     // TODO 20
     // return the total sum of the word scores
-    return 0;
+    return wordScores.reduce(add,0);
 }
 
 
